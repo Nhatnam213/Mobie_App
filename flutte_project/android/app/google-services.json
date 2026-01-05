@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "10645149408",
+    "project_id": "vieclamsv-a9383",
+    "storage_bucket": "vieclamsv-a9383.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:10645149408:android:5124f939fc5ba7d211e285",
+        "android_client_info": {
+          "package_name": "com.example.flutte_project"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCQhxm9bmo2eKJCr6jG7oPkX6xTDfY51Yw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

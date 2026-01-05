@@ -1,0 +1,8 @@
+TK admin:
+
+admin@gmail.com	
+admin1
+
+User có thể tự đăng kí
+
+Database được sử dụng lưu trên FireBase

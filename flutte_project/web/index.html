@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta content="IE=Edge" http-equiv="X-UA-Compatible" />
+    <meta name="description" content="Flutter Web App" />
+
+    <!-- iOS meta tags & icons -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="apple-mobile-web-app-title" content="app" />
+    <link rel="apple-touch-icon" href="icons/Icon-192.png" />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="favicon.png" />
+
+    <title>app</title>
+    <link rel="manifest" href="manifest.json" />
+
+    <!-- ✅ FIX font render / chống mờ -->
+    <style>
+      body {
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+    </style>
+  </head>
+
+  <!-- ✅ FIX nhảy font: ẩn body trước -->
+  <body style="visibility: hidden;">
+    <script>
+      var serviceWorkerVersion = null;
+    </script>
+    <script src="flutter.js" defer></script>
+
+    <script>
+      window.addEventListener('load', function (ev) {
+        _flutter.loader.loadEntrypoint({
+          serviceWorker: {
+            serviceWorkerVersion: serviceWorkerVersion,
+          },
+          onEntrypointLoaded: function (engineInitializer) {
+            engineInitializer.initializeEngine().then(function (appRunner) {
+              appRunner.runApp();
+              // ✅ FIX nhảy font: chỉ hiện UI khi app đã run
+              document.body.style.visibility = 'visible';
+            });
+          },
+        });
+      });
+    </script>
+  </body>
+</html>
