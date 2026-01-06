@@ -61,16 +61,8 @@ class AppTheme {
         color: _text,
         height: 1.2,
       ),
-      bodyMedium: TextStyle(
-        fontSize: 14,
-        color: _text2,
-        height: 1.25,
-      ),
-      bodySmall: TextStyle(
-        fontSize: 12,
-        color: _muted,
-        height: 1.25,
-      ),
+      bodyMedium: TextStyle(fontSize: 14, color: _text2, height: 1.25),
+      bodySmall: TextStyle(fontSize: 12, color: _muted, height: 1.25),
     ),
 
     // Divider
@@ -81,13 +73,13 @@ class AppTheme {
     ),
 
     // Card (phẳng, viền nhẹ, bo tinh)
-    cardTheme: CardTheme(
+    cardTheme: CardThemeData(
       color: _surface,
       elevation: 0,
       margin: EdgeInsets.zero,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(18),
-        side: const BorderSide(color: _border),
+        side: BorderSide(color: _border),
       ),
     ),
 
@@ -127,14 +119,9 @@ class AppTheme {
         backgroundColor: _primary,
         foregroundColor: Colors.white,
         elevation: 0,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(24),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
         padding: const EdgeInsets.symmetric(vertical: 14),
-        textStyle: const TextStyle(
-          fontWeight: FontWeight.w800,
-          fontSize: 14,
-        ),
+        textStyle: const TextStyle(fontWeight: FontWeight.w800, fontSize: 14),
       ),
     ),
 
@@ -143,14 +130,9 @@ class AppTheme {
       style: OutlinedButton.styleFrom(
         foregroundColor: _text,
         side: const BorderSide(color: _border),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(24),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
         padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 14),
-        textStyle: const TextStyle(
-          fontWeight: FontWeight.w800,
-          fontSize: 14,
-        ),
+        textStyle: const TextStyle(fontWeight: FontWeight.w800, fontSize: 14),
       ),
     ),
 

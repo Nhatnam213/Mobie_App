@@ -8,8 +8,8 @@ import 'csv_downloader_stub.dart'
     if (dart.library.html) 'csv_downloader_web.dart';
 
 /// Tải / lưu CSV xuống máy người dùng.
-/// - Web: sẽ trigger browser download
-/// - Mobile/Desktop: sẽ lưu file vào thư mục tạm (systemTemp) và return path
+/// - Web: trigger browser download
+/// - Mobile: mở Share/Save As để người dùng chọn nơi lưu
 Future<String?> downloadCsv(String csvContent, String fileName) {
   return downloadCsvImpl(csvContent, fileName);
 }
