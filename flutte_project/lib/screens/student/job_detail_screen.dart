@@ -20,6 +20,46 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
     return (s == null || s.isEmpty) ? fallback : s;
   }
 
+  /// ✅ CHỈ THÊM ĐIỀU KIỆN: phải có đủ Họ tên + SĐT trong users/{uid}
+  Future<bool> _checkProfileRequired(String uid) async {
+    final userRef = FirebaseFirestore.instance.collection('users').doc(uid);
+    final userSnap = await userRef.get();
+
+    if (!userSnap.exists) {
+      if (!mounted) return false;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Vui lòng cập nhật hồ sơ trước khi ứng tuyển.'),
+        ),
+      );
+      return false;
+    }
+
+    final data = userSnap.data() as Map<String, dynamic>?;
+
+    final name = (data?['name'] ??
+        data?['fullName'] ??
+        data?['displayName'] ??
+        '')
+        .toString()
+        .trim();
+
+    final phone =
+    (data?['phone'] ?? data?['phoneNumber'] ?? '').toString().trim();
+
+    if (name.isEmpty || phone.isEmpty) {
+      if (!mounted) return false;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Vui lòng nhập đầy đủ Họ tên và SĐT trong Hồ sơ trước khi ứng tuyển.'),
+        ),
+      );
+      return false;
+    }
+
+    return true;
+  }
+
   Future<void> _apply(Job jobFromDb) async {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) {
@@ -29,9 +69,22 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
       return;
     }
 
+    final uid = user.uid;
+
+    // ✅ THÊM ĐIỀU KIỆN Ở ĐÂY (không đổi UI/bố cục)
+    try {
+      final ok = await _checkProfileRequired(uid);
+      if (!ok) return;
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Không kiểm tra được hồ sơ: $e')),
+      );
+      return;
+    }
+
     setState(() => _loading = true);
 
-    final uid = user.uid;
     final jobId = jobFromDb.id;
     final jobsRef = FirebaseFirestore.instance.collection('jobs').doc(jobId);
 
@@ -48,20 +101,21 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
       final jobData = jobSnap.data() as Map<String, dynamic>;
 
       final ownerId =
-          (jobData['ownerid'] ?? jobData['ownerId'] ?? '').toString();
+      (jobData['ownerid'] ?? jobData['ownerId'] ?? '').toString();
 
       if (ownerId.isNotEmpty && ownerId == uid) {
         if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-              content: Text('Bạn không thể ứng tuyển việc do chính bạn tạo.')),
+            content: Text('Bạn không thể ứng tuyển việc do chính bạn tạo.'),
+          ),
         );
         return;
       }
 
       final appId = '${jobId}_$uid';
       final appliedRef =
-          FirebaseFirestore.instance.collection('applied_jobs').doc(appId);
+      FirebaseFirestore.instance.collection('applied_jobs').doc(appId);
 
       final existed = await appliedRef.get();
       if (existed.exists) {
@@ -109,7 +163,7 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
     final isLoggedIn = uid != null;
 
     final docRef =
-        FirebaseFirestore.instance.collection('jobs').doc(widget.job.id);
+    FirebaseFirestore.instance.collection('jobs').doc(widget.job.id);
 
     return StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
       stream: docRef.snapshots(),
@@ -150,7 +204,9 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
                 Text(
                   _t(job.title),
                   style: const TextStyle(
-                      fontSize: 22, fontWeight: FontWeight.w900),
+                    fontSize: 22,
+                    fontWeight: FontWeight.w900,
+                  ),
                 ),
                 const SizedBox(height: 12),
 
@@ -160,7 +216,7 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
                 if (job.quantity.trim().isNotEmpty)
                   _row('👥 Số lượng', job.quantity.trim()),
 
-                // ✅ THÔNG TIN LIÊN HỆ - lấy từ DB nên chắc chắn hiện nếu có
+                // ✅ THÔNG TIN LIÊN HỆ - lấy từ DB
                 if (hasContact) ...[
                   const SizedBox(height: 12),
                   const Divider(),
@@ -186,13 +242,14 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
                 SizedBox(
                   height: 48,
                   child: ElevatedButton(
-                    onPressed: (!isLoggedIn || _loading) ? null : () => _apply(job),
+                    onPressed:
+                    (!isLoggedIn || _loading) ? null : () => _apply(job),
                     child: _loading
                         ? const SizedBox(
-                            width: 20,
-                            height: 20,
-                            child: CircularProgressIndicator(strokeWidth: 2),
-                          )
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
                         : const Text('Ứng tuyển'),
                   ),
                 ),
@@ -219,7 +276,10 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
         children: [
           SizedBox(
             width: 110,
-            child: Text(k, style: const TextStyle(fontWeight: FontWeight.w700)),
+            child: Text(
+              k,
+              style: const TextStyle(fontWeight: FontWeight.w700),
+            ),
           ),
           Expanded(child: Text(v)),
         ],
